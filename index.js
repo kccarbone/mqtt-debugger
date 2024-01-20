@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { stdin, stdout, exit } from 'node:process';
 import { printErrors } from './util.js';
 import chalk from 'chalk';
@@ -20,7 +21,7 @@ catch (err) {
 }
 
 client.on('connect', connack => {
-  console.log(`${chalk.green('Connected')} code ${connack}`);
+  console.log(`${chalk.green('CONNECT')} (code ${connack})`);
 });
 
 client.on('disconnect', () => {
@@ -52,5 +53,5 @@ client.on('message', (topic, message) => {
 });
 
 // Start listening!
-client.subscribe(topicString);
+await client.subscribeAsync(topicString);
 console.log(`Listening for messages on ${chalk.cyan(topicString)}\n`);
