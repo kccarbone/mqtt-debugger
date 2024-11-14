@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import mqtt from 'mqtt'; 
 
 const args = process.argv.slice(2);
-const topicString = args[0] || '#';
+const topicRegex = args[0] || '#';
 const cxString = args[1] ? `mqtt://${args[1]}` : 'mqtt://localhost:1883';
 let client;
 
@@ -49,9 +49,11 @@ client.on('error', err => {
 });
 
 client.on('message', (topic, message) => {
-  console.log(`${chalk.black.bgGreen('RECD')} ${chalk.cyan(topic)}: ${message.toString()}`);
+  if (topic.match(topicRegex)) {
+    console.log(`${chalk.black.bgGreen('RECD')} ${chalk.cyan(topic)}: ${message.toString()}`);
+  }
 });
 
 // Start listening!
-await client.subscribeAsync(topicString);
-console.log(`Listening for messages on ${chalk.cyan(topicString)}\n`);
+await client.subscribeAsync('#');
+console.log(`Listening for messages matching ${chalk.cyan(topicRegex)}\n`);
