@@ -1,5 +1,9 @@
 import chalk from 'chalk';
 
+export function sleep(delay) {
+  return new Promise(r => setTimeout(r, delay));
+}
+
 export function printErrors(err, depth = 0) {
   if (err instanceof AggregateError) {
     console.log(chalk.gray(`${''.padStart(depth * 2, ' ')}(${err.errors.length} errors)`));
@@ -8,6 +12,6 @@ export function printErrors(err, depth = 0) {
     }
   }
   else {
-    console.log(`${''.padStart(depth * 2, ' ')}${chalk.black.bgRed(' ERROR ')} ${JSON.stringify(err)}`);
+    console.log(`${''.padStart(depth * 2, ' ')}${chalk.black.bgRedBright(' ERROR ')} ${JSON.stringify(err)}`);
   }
 }

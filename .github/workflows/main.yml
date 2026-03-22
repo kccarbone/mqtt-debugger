@@ -9,30 +9,31 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 'latest'
+          registry-url: 'https://registry.npmjs.org'
       - name: Pack library
+        id: pack
         run: |
           rm -rf .github/
           rm .gitignore
           rm README.md
-          npm pack
+          PACKAGE_FILE="$(npm pack)"
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "package_file=${PACKAGE_FILE}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
       - name: Publish to npm
-        id: publish
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          strategy: all
-          package: ./package.json
-          access: public
-          token: ${{ secrets.NPM_TOKEN }}
-      - name: Publish GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.publish.outputs.version }}
-          files: |
-            *.tgz
+        run: npm publish --provenance --access public
+      - name: Create GitHub release and upload package
+        run: |
+          gh release create "${{ steps.pack.outputs.version }}" "${{ steps.pack.outputs.package_file }}" --title "v${{ steps.pack.outputs.version }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
