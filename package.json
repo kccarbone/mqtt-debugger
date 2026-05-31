@@ -1,6 +1,6 @@
 {
   "name": "@kcarbone/mqtt-debugger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple debug util for mqtt client",
   "author": "Kyle Carbone",
   "license": "MIT",
@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "chalk": "^5.3.0",
-    "mqtt": "^5.15.0"
+    "mqtt": "^5.15.1"
   }
 }

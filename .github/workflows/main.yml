@@ -25,7 +25,6 @@ jobs:
         run: |
           rm -rf .github/
           rm .gitignore
-          rm README.md
           PACKAGE_FILE="$(npm pack)"
           VERSION="$(node -p "require('./package.json').version")"
           echo "package_file=${PACKAGE_FILE}" >> "$GITHUB_OUTPUT"
